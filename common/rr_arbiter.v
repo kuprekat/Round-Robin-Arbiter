@@ -11,6 +11,6 @@ module rr_arbiter(clk, resetb, ack, request, grant);
 
 	arbiter arbiter(.req(request), .grant(grant_tmp), .base(next_base));
 
-	reg_decoder final_decoder(.clk(clk), .rst(resetb), .ack(ack), .load(1'b1), .in(grant_tmp), .out(grant));
+	decoder final_decoder(.clk(clk), .rst(resetb), .ack(ack), .load(1'b1), .in(grant_tmp), .out(grant));
 
 endmodule
