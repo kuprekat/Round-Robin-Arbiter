@@ -4,8 +4,8 @@ module decoder
     parameter OUTPUT_TYPE = 1
 )
 (
-    input                      clock,
-    input                      reset,
+    input                      clk,
+    input                      rst,
     input                      ack,
     input                      load,
     input 	   [WIDTH - 1:0] in,
