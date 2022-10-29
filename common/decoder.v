@@ -1,6 +1,6 @@
-module register
+module decoder
 # (
-    parameter WIDTH = 8,
+    parameter WIDTH = 4,
     parameter OUTPUT_TYPE = 1
 )
 (

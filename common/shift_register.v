@@ -1,8 +1,8 @@
 //сохраняет значение с циклическим сдвигом на 1 влево
 
-module register
+module shift_register
 # (
-    parameter WIDTH = 8
+    parameter WIDTH = 4
 )
 (
     input                      clock,

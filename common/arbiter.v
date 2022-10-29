@@ -6,7 +6,7 @@ module arbiter (
 	req, grant, base
 );
 
-parameter WIDTH = 16;
+parameter WIDTH = 4;
 
 input [WIDTH-1:0] req;
 output [WIDTH-1:0] grant;
