@@ -12,8 +12,8 @@ module decoder
     output reg     [WIDTH - 1:0] out
 );
 
-	always @ (posedge clock, negedge reset)
-	  if (~reset)
+	always @ (posedge clk, negedge rst)
+	  if (~rst)
             out <= {WIDTH { 1'b0 }};
           else if (load & ack)
             out <= in;
