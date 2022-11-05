@@ -6,7 +6,7 @@ module test_arbiter;
 
 	rr_arbiter #(WIDTH) rr_arbiter(.clk(clk), .resetb(rst), .ack(ack), .request(request), .grant(grant));
 	
-
+      initial clk = 0;
       always #1
             clk = !clk;
 
@@ -15,37 +15,37 @@ module test_arbiter;
 			rst = 0;
 			ack = 0;
 			
-			#10;
+			#2;
 			rst = 1;
 			
 			request = 4'b1010;
 			ack = 1;
-			#100;
+			#4;
 
-			rst = 0;
 			ack = 0;
-			#10;
-			rst = 1;
+			#2;
 			request = 4'b0111;
+			#2
 			ack = 1;
-			#100;
+			#4;
 
-			rst = 0;
 			ack = 0;
-			#10;
-			rst = 1;
+			#2;
 			request=4'b1000;
+			#2
 			ack = 1;
-			#100;
+			#4;
 
 		end
 
 	always@(request)
-		$monitor("\n\tREQUEST VECTOR: %b\tGRANT VECTOR: %b\n",request,grant );
+		$monitor("\n\tREQUEST VECTOR: %b\tGRANT VECTOR: %b\t ACK: %d\n",request,grant,ack );
 
       initial begin 
             $dumpfile("dump.vcd");
             $dumpvars(1);
+            #30;
+            $finish;
       end
 
 endmodule
