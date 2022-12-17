@@ -1,0 +1,9 @@
+make[1]: вход в каталог «/home/user/katya/Round-Robin-Arbiter/uart_task»
+make[1]: «a.out» не требует обновления.
+make[1]: выход из каталога «/home/user/katya/Round-Robin-Arbiter/uart_task»
+Gtk-Message: 04:57:10.339: Failed to load module "canberra-gtk-module"
+
+GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+
+[0] start time.
+[1420] end time.
