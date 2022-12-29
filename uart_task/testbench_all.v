@@ -3,14 +3,14 @@ module testbench_all;
     parameter WIDTH = 8;
     parameter N = 2;
 
-    reg [WIDTH-1:0] initial_data_send;
+    reg [WIDTH - 1:0] initial_data_send;
     reg clk, rst, start_send;
     wire tx1, rx1, busy_trans, valid, busy_rec, busy;
-    wire [2*WIDTH-1:0] result_data_recv;
+    wire [2 * WIDTH - 1:0] result_data_recv;
 
-    reg [WIDTH-1:0] vec1[N - 1:0];
-    reg [WIDTH-1:0] vec2[N - 1:0];
-    reg [2*WIDTH-1:0] res[N-1:0];
+    reg [WIDTH - 1:0] vec1[N - 1:0];
+    reg [WIDTH - 1:0] vec2[N - 1:0];
+    reg [2 * WIDTH - 1:0] res[N-1:0];
 
     uart_transmitter 
     #(
@@ -66,9 +66,9 @@ module testbench_all;
     initial begin
         rst = 1;
         clk = 1;
-        vec1[0] = 8'b00001101;
+        vec1[0] = 8'b00101101;
         vec1[1] = 8'b00000101;
-        vec2[0] = 8'b00000001;
+        vec2[0] = 8'b01100001;
         vec2[1] = 8'b00000011;
         initial_data_send = vec1[0];
         start_send = 1;
@@ -78,32 +78,29 @@ module testbench_all;
         start_send = 0;
         #120
 
-        #1
         initial_data_send = vec1[0];
-        #1
+        #2
         start_send = 1;
         #2
         start_send = 0;
         #120
 
-        #1
         initial_data_send = vec1[1];
-        #1
+        #2
         start_send = 1;
         #2
         start_send = 0;
         #120
 
-        #1
         initial_data_send = vec2[0];
-        #1
+        #2
         start_send = 1;
         #2
         start_send = 0;
         #120
-        #1
+
         initial_data_send = vec2[1];
-        #1
+        #2
         start_send = 1;
         #2
         start_send = 0;

@@ -9,18 +9,19 @@ module main
 );
 
     reg [2 * N - 1:0] counter; //count numbers that has been entered (two vectors with N elements)
-    reg waiting, start, input_done;
-    wire [WIDTH - 1:0] input_value; //one number of input vector
-    reg [2 * WIDTH - 1:0] output_value; //one number of result vector
+    reg waiting, start, input_done, processing_new_value;
+    wire [WIDTH - 1:0] input_value; //one element of input vector
+    reg [2 * WIDTH - 1:0] output_value; //one element of result vector
     wire [N * WIDTH - 1:0] vec1;
     wire [N * WIDTH - 1:0] vec2;
-    reg [WIDTH - 1:0] read_vector[N * 2 - 1:0]; //reg to store the input
+    reg [WIDTH - 1:0] read_tmp[N * 2 - 1:0]; //reg to store the input
 
     wire [2 * N * WIDTH - 1:0] result_vec; //result of multiplication
     reg [2 * N * WIDTH - 1:0] result_tmp; //reg to store the result
     wire [2 * WIDTH - 1:0] result_to_send[N-1:0]; //wire to send the result
     
-    wire valid_input, busy_res, busy_trans;
+    wire valid_input, busy_rec, busy_trans;
+    //if valid_input = 0 -> incorrect input data or recieving new value atm
 
 
     uart_receiver 
@@ -36,7 +37,7 @@ module main
         .reset  (rst        ), 
         .data   (input_value), 
         .valid  (valid_input   ), 
-        .busy   (busy_res   )
+        .busy   (busy_rec   )
 
     );
 
@@ -74,9 +75,9 @@ module main
     generate 
         for (i = 0; i < 2 * N; i = i + 1)
             if (i < N)
-            	assign vec1[(i + 1) * WIDTH - 1:i * WIDTH] = read_vector[i];
+            	assign vec1[(i + 1) * WIDTH - 1:i * WIDTH] = read_tmp[i];
             else
-            	assign vec2[((i - N) + 1) * WIDTH - 1:(i - N) * WIDTH] = read_vector[i];
+            	assign vec2[((i - N) + 1) * WIDTH - 1:(i - N) * WIDTH] = read_tmp[i];
     endgenerate
     
     generate 
@@ -90,26 +91,25 @@ module main
             counter <= 0;
             result_tmp <= 0;
             start <= 0;
-            waiting <= 1;
             input_done <= 0;
+            processing_new_value <= 0;
+        end
+        //reading vectors
+        else if (!input_done && valid_input && !processing_new_value) begin
+            processing_new_value <= 1;
+            if (counter < N * 2) begin
+                read_tmp[counter] <= input_value;
+                counter <= counter + 1;
+            end
+        end
+        else if (!input_done && !valid_input && processing_new_value) begin
+        	processing_new_value <= 0;
         end
         //result
         else if (!input_done && counter == N * 2) begin
             input_done <= 1;
             result_tmp <= result_vec;
             counter <= 0;
-        end
-        //reading vectors
-        else if (!input_done && valid_input && waiting) begin
-            waiting <= 0;
-            if (counter < N * 2) begin
-                read_vector[counter] <= input_value;
-                counter <= counter + 1;
-            end
-        end
-        //invalid input
-        else if (!input_done && !waiting && !valid_input) begin
-        	waiting <= 1;
         end
         //transmit
         else if (input_done) begin
@@ -124,8 +124,8 @@ module main
         	else if (counter == 2 * N) begin
         		counter <= 0;
         		input_done <= 0;
-        		waiting <= 1;
         		start <= 0;
+        		processing_new_value <= 0;
         	end
         end
         
